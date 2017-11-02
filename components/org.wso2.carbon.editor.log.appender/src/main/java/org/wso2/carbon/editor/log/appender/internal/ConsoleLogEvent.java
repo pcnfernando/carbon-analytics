@@ -22,6 +22,7 @@ public class ConsoleLogEvent {
     private String level;
     private String message;
     private String Fqcn;
+    private String Stacktrace;
 
     public String getTimeStamp() {
         return timeStamp;
@@ -53,6 +54,14 @@ public class ConsoleLogEvent {
 
     public void setFqcn(String fqcn) {
         Fqcn = fqcn;
+    }
+
+    public String getStacktrace() {
+        return Stacktrace;
+    }
+
+    public void setStacktrace(String stacktrace) {
+        Stacktrace = stacktrace;
     }
 
 }
