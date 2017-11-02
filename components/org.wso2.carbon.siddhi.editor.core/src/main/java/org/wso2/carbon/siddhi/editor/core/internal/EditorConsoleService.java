@@ -53,7 +53,6 @@ public class EditorConsoleService implements WebSocketEndpoint {
     private Session session;
     private CircularBuffer<ConsoleLogEvent> circularBuffer = DataHodlder.getBuffer();
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-   /* private int publishedIndex = -1;*/
 
     @OnOpen
     public void onOpen(Session session) {
@@ -108,7 +107,6 @@ public class EditorConsoleService implements WebSocketEndpoint {
                     ObjectMapper mapper = new ObjectMapper();
                     String json = mapper.writeValueAsString(logEvent);
                     session.getBasicRemote().sendText(json);
-                    /*publishedIndex++;*/
                 } catch (IOException e) {
                     LogLog.error("Editor Console Appender cannot publish log event, " + e.getMessage(), e);
                 }
