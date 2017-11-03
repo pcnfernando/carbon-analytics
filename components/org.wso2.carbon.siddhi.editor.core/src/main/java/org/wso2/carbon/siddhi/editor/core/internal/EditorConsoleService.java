@@ -74,6 +74,18 @@ public class EditorConsoleService implements WebSocketEndpoint {
 
     @OnClose
     public void onClose(Session session) {
+        if (scheduler != null) {
+            try {
+                scheduler.shutdown();
+                scheduler.awaitTermination(10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                // (Re-)Cancel if current thread also interrupted
+                scheduler.shutdownNow();
+                // Preserve interrupt status
+                Thread.currentThread().interrupt();
+                LogLog.error("Interrupted while awaiting for Schedule Executor termination" + e.getMessage(), e);
+            }
+        }
         if (session.isOpen()) {
             try {
                 session.close();

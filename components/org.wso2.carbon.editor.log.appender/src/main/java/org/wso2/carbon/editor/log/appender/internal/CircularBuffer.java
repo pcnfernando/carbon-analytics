@@ -123,9 +123,6 @@ public class CircularBuffer<E> {
         return result;
     }
 
-
-
-
     /**
      * This method is added for backward compatibility.
      *
