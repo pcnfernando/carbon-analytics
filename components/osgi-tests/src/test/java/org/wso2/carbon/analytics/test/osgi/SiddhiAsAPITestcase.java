@@ -26,7 +26,7 @@ import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import org.wso2.carbon.analytics.test.osgi.util.HTTPResponseMessage;
-import org.wso2.carbon.analytics.test.osgi.util.TestUtil;
+import org.wso2.carbon.analytics.test.osgi.util.ConnectionUtil;
 import org.wso2.carbon.container.CarbonContainerFactory;
 import org.wso2.carbon.kernel.CarbonServerInfo;
 
@@ -98,7 +98,7 @@ public class SiddhiAsAPITestcase {
                 "insert into BarStream;";
 
         logger.info("Deploying valid Siddhi App through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(body, baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(body, baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 201);
         Assert.assertEquals(httpResponseMessage.getContentType(), "application/json");
@@ -124,7 +124,7 @@ public class SiddhiAsAPITestcase {
                 "insert into BarStream;";
 
         logger.info("Deploying valid Siddhi App whih is already existing in server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(body, baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(body, baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 409);
     }
@@ -147,7 +147,7 @@ public class SiddhiAsAPITestcase {
                 "select symbol, price, volume\n" +
                 "";
         logger.info("Deploying invalid Siddhi App through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(invalidBody, baseURI, path, contentType,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(invalidBody, baseURI, path, contentType,
                 method, true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 400);
 
@@ -172,7 +172,7 @@ public class SiddhiAsAPITestcase {
                 "";
 
         logger.info("Deploying Siddhi App with invalid content type through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(invalidBody, baseURI, path, contentType,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(invalidBody, baseURI, path, contentType,
                 method, true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 415);
 
@@ -187,7 +187,7 @@ public class SiddhiAsAPITestcase {
         String method = "POST";
 
         logger.info("Deploying Siddhi App without request body through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest("", baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest("", baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 400);
     }
@@ -215,7 +215,7 @@ public class SiddhiAsAPITestcase {
                 "insert into BarStream;";
 
         logger.info("Deploying valid Siddhi App which does not exists through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(body, baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(body, baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 201);
 
@@ -240,7 +240,7 @@ public class SiddhiAsAPITestcase {
                 "insert into BarStream;";
 
         logger.info("Deploying valid Siddhi App whih is already existing in server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(body, baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(body, baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
 
@@ -265,7 +265,7 @@ public class SiddhiAsAPITestcase {
                 "select symbol, price, volume\n" +
                 "";
         logger.info("Deploying invalid Siddhi App through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(invalidBody, baseURI, path, contentType,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(invalidBody, baseURI, path, contentType,
                 method, true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 400);
     }
@@ -289,7 +289,7 @@ public class SiddhiAsAPITestcase {
                 "";
 
         logger.info("Deploying Siddhi App with invalid content type through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(invalidBody, baseURI, path, contentType,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(invalidBody, baseURI, path, contentType,
                 method, true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 415);
     }
@@ -307,7 +307,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "text/plain";
 
         logger.info("Retrieving active Siddhi App through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(" ", baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(" ", baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
     }
@@ -321,7 +321,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "application/json";
 
         logger.info("Retrieving active Siddhi App through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(" ", baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(" ", baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
     }
@@ -335,7 +335,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "text/plain";
 
         logger.info("Retrieving non exist Siddhi App through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(" ", baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(" ", baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 404);
     }
@@ -349,7 +349,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "text/plain";
 
         logger.info("Retrieving inactive Siddhi App through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(" ", baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(" ", baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
     }
@@ -366,7 +366,7 @@ public class SiddhiAsAPITestcase {
         String method = "GET";
 
         logger.info("Retrieving all Siddhi App names through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, null, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, null, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
     }
@@ -380,7 +380,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "application/json";
 
         logger.info("Retrieving all Siddhi App names through REST API (different content type)");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
 
@@ -399,7 +399,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "text/plain";
 
         logger.info("Retrieving the status of a Siddhi App which not exists in server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 404);
     }
@@ -412,7 +412,7 @@ public class SiddhiAsAPITestcase {
         String method = "GET";
 
         logger.info("Retrieving the status of a Siddhi App which exists in server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, null, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, null, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
     }
@@ -425,7 +425,7 @@ public class SiddhiAsAPITestcase {
         String method = "GET";
 
         logger.info("Retrieving the status of a Siddhi inactive App which exists in server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, null, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, null, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
     }
@@ -440,7 +440,7 @@ public class SiddhiAsAPITestcase {
 
         logger.info("Retrieving the status of a Siddhi App which exists in server through REST API with different " +
                 "content type");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
     }
@@ -458,7 +458,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "text/plain";
 
         logger.info("Taking snapshot of a Siddhi App that exists in server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest("", baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest("", baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 201);
 
@@ -474,7 +474,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "text/plain";
 
         logger.info("Taking snapshot of a Siddhi App that does not exist in server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest("", baseURI, path, null, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest("", baseURI, path, null, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 404);
     }
@@ -488,7 +488,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "text/plain";
 
         logger.info("Taking snapshot again for a Siddhi App that exists in server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest("", baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest("", baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 201);
 
@@ -505,7 +505,7 @@ public class SiddhiAsAPITestcase {
 
         logger.info("Taking snapshot of a Siddhi App that exists in server through REST API by invoking with " +
                 "invalid method");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest("", baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest("", baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 405);
     }
@@ -523,7 +523,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "text/plain";
 
         logger.info("Restoring the snapshot (last revision) of a Siddhi App that exists in server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest("", baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest("", baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
     }
@@ -537,7 +537,7 @@ public class SiddhiAsAPITestcase {
 
         logger.info("Restoring the snapshot (last revision) of a Siddhi App that does not exist in " +
                 "server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest("", baseURI, path, null, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest("", baseURI, path, null, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 404);
     }
@@ -550,7 +550,7 @@ public class SiddhiAsAPITestcase {
         String method = "POST";
 
         logger.info("Restoring the snapshot revison that does not exist of a Siddhi App through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest("", baseURI, path, null, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest("", baseURI, path, null, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 500);
 
@@ -566,7 +566,7 @@ public class SiddhiAsAPITestcase {
 
         logger.info("Taking snapshot of a Siddhi App that exists in server through REST API by invoking with " +
                 "invalid method");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest("", baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest("", baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 405);
     }
@@ -584,7 +584,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "text/plain";
 
         logger.info("Deleting Siddhi App which not exists in server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 404);
     }
@@ -597,7 +597,7 @@ public class SiddhiAsAPITestcase {
         String method = "DELETE";
 
         logger.info("Deleting valid Siddhi App which exists in server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, null, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, null, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
         Thread.sleep(6000);
@@ -612,7 +612,7 @@ public class SiddhiAsAPITestcase {
         String method = "DELETE";
 
         logger.info("Deleting Siddhi App which without providing the app name in the url through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, null, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, null, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 405);
     }
@@ -626,7 +626,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "application/json";
 
         logger.info("Deleting inactive Siddhi App which exists in server through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
         Thread.sleep(6000);
@@ -644,7 +644,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "text/plain";
 
         logger.info("Retrieving all Siddhi App names through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
     }
@@ -662,7 +662,7 @@ public class SiddhiAsAPITestcase {
         String contentType = "text/plain";
 
         logger.info("Retrieving all Siddhi App names through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, contentType, method,
                 false, null, null);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 401);
     }
@@ -679,9 +679,16 @@ public class SiddhiAsAPITestcase {
         String contentType = "text/plain";
 
         logger.info("Retrieving all Siddhi App names through REST API");
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(null, baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(null, baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, "admin2");
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 401);
     }
 
+    private HTTPResponseMessage sendHRequest(String body, URI baseURI, String path, String contentType,
+                                             String methodType, Boolean auth, String userName, String password) {
+        ConnectionUtil connectionUtil = new ConnectionUtil(baseURI, path, auth, false, methodType,
+                contentType, userName, password);
+        connectionUtil.addBodyContent(body);
+        return connectionUtil.getResponse();
+    }
 }

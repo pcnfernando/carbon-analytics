@@ -28,7 +28,7 @@ import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import org.wso2.carbon.analytics.test.osgi.util.HTTPResponseMessage;
-import org.wso2.carbon.analytics.test.osgi.util.TestUtil;
+import org.wso2.carbon.analytics.test.osgi.util.ConnectionUtil;
 import org.wso2.carbon.container.CarbonContainerFactory;
 import org.wso2.carbon.siddhi.store.api.rest.ApiResponseMessage;
 import org.wso2.carbon.stream.processor.common.EventStreamService;
@@ -117,9 +117,9 @@ public class SiddhiMetricsAPITestcase {
         String path = "/statistics";
         String contentType = "application/json";
         String method = "PUT";
-        TestUtil.waitForAppDeployment(siddhiAppRuntimeService, eventStreamService, APP_NAME, Duration.TEN_SECONDS);
-        TestUtil.waitForMicroServiceDeployment(microservicesRegistry, path, Duration.TEN_SECONDS);
-        return TestUtil.sendHRequest("{\"statsEnable\":" + enableStats + "}", baseURI, path, contentType, method,
+        ConnectionUtil.waitForAppDeployment(siddhiAppRuntimeService, eventStreamService, APP_NAME, Duration.TEN_SECONDS);
+        ConnectionUtil.waitForMicroServiceDepoyment(microservicesRegistry, path, Duration.TEN_SECONDS);
+        return sendHRequest("{\"statsEnable\":" + enableStats + "}", baseURI, path, contentType, method,
                 true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
     }
 
@@ -163,7 +163,7 @@ public class SiddhiMetricsAPITestcase {
         String path = "/system-details";
         String method = "GET";
         String contentType = "application/json";
-        HTTPResponseMessage httpResponseMessage = TestUtil.sendHRequest(" ", baseURI, path, contentType, method,
+        HTTPResponseMessage httpResponseMessage = sendHRequest(" ", baseURI, path, contentType, method,
                                                                         true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
         Assert.assertEquals(httpResponseMessage.getResponseCode(), 200);
     }
@@ -207,9 +207,16 @@ public class SiddhiMetricsAPITestcase {
         String path = "/statistics";
         String method = "GET";
         String contentType = "application/json";
-        return TestUtil.sendHRequest(" ", baseURI, path, contentType, method,
+        return sendHRequest(" ", baseURI, path, contentType, method,
                                      true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
     }
 
+    private HTTPResponseMessage sendHRequest(String body, URI baseURI, String path, String contentType,
+                                             String methodType, Boolean auth, String userName, String password) {
+        ConnectionUtil connectionUtil = new ConnectionUtil(baseURI, path, auth, false, methodType,
+                contentType, userName, password);
+        connectionUtil.addBodyContent(body);
+        return connectionUtil.getResponse();
+    }
 
 }

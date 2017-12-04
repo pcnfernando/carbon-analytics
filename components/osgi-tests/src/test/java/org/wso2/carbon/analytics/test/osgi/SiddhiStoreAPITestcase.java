@@ -33,7 +33,7 @@ import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import org.wso2.carbon.analytics.test.osgi.util.HTTPResponseMessage;
-import org.wso2.carbon.analytics.test.osgi.util.TestUtil;
+import org.wso2.carbon.analytics.test.osgi.util.ConnectionUtil;
 import org.wso2.carbon.container.CarbonContainerFactory;
 import org.wso2.carbon.siddhi.store.api.rest.ApiResponseMessage;
 import org.wso2.carbon.siddhi.store.api.rest.model.ModelApiResponse;
@@ -118,11 +118,11 @@ public class SiddhiStoreAPITestcase {
 
     private void testQuery(String body, Event[] events, int expectedResponseCode, String expectedResponse) throws
             InterruptedException {
-        TestUtil.waitForAppDeployment(siddhiAppRuntimeService, eventStreamService, APP_NAME, Duration.TEN_SECONDS);
+        ConnectionUtil.waitForAppDeployment(siddhiAppRuntimeService, eventStreamService, APP_NAME, Duration.TEN_SECONDS);
         for (Event event : events) {
             eventStreamService.pushEvent(APP_NAME, "SmartHomeData", event);
         }
-        TestUtil.waitForMicroServiceDeployment(microservicesRegistry, "/stores", Duration.TEN_SECONDS);
+        ConnectionUtil.waitForMicroServiceDepoyment(microservicesRegistry, "/stores", Duration.TEN_SECONDS);
         testHttpResponse(body, events, expectedResponseCode, expectedResponse, HOSTNAME, HTTP_PORT,
                 Duration.TEN_SECONDS);
     }
@@ -132,14 +132,14 @@ public class SiddhiStoreAPITestcase {
         URI baseURI = URI.create(String.format("http://%s:%d", hostname, port));
         await().atMost(duration).until(() -> {
             HTTPResponseMessage httpResponseMessage =
-                    TestUtil.sendHRequest(body, baseURI, API_CONTEXT_PATH, CONTENT_TYPE_JSON, HTTP_METHOD_POST,
-                                          true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
+                    sendHRequest(body, baseURI, API_CONTEXT_PATH, CONTENT_TYPE_JSON, HTTP_METHOD_POST,
+                            true, DEFAULT_USER_NAME, DEFAULT_PASSWORD);
             if (expectedResponseCode == Response.Status.OK.getStatusCode()) {
                 ModelApiResponse response =
                         gson.fromJson(httpResponseMessage.getSuccessContent().toString(), ModelApiResponse.class);
                 if (httpResponseMessage.getResponseCode() == expectedResponseCode &&
-                    httpResponseMessage.getContentType().equalsIgnoreCase(CONTENT_TYPE_JSON) &&
-                    response.getRecords().size() == inputEvents.length) {
+                        httpResponseMessage.getContentType().equalsIgnoreCase(CONTENT_TYPE_JSON) &&
+                        response.getRecords().size() == inputEvents.length) {
                     Assert.assertEquals(response.getRecords().size(), inputEvents.length);
                     return true;
                 }
@@ -211,6 +211,14 @@ public class SiddhiStoreAPITestcase {
     public void testNullQuery() throws InterruptedException {
         testStoreAPI(APP_NAME, null, new Event[]{}, Response.Status.BAD_REQUEST,
                      "Query cannot be empty or null");
+    }
+
+    private HTTPResponseMessage sendHRequest(String body, URI baseURI, String path, String contentType,
+                                             String methodType, Boolean auth, String userName, String password) {
+        ConnectionUtil connectionUtil = new ConnectionUtil(baseURI, path, auth, false, methodType,
+                contentType, userName, password);
+        connectionUtil.addBodyContent(body);
+        return connectionUtil.getResponse();
     }
 
 }
