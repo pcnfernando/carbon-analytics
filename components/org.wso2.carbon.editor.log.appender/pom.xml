@@ -46,12 +46,6 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <log.appender.launch.property.entry>
-            file\:plugins/${project.artifactId}_${project.version}.jar@1\:false
-        </log.appender.launch.property.entry>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -100,6 +94,19 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>parse-version</id>
+                        <goals>
+                            <goal>parse-version</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -119,4 +126,9 @@
             </resource>
         </resources>
     </build>
+    <properties>
+        <log.appender.launch.property.entry>
+            file\:plugins/${project.artifactId}_${parsedVersion.osgiVersion}.jar@1\:false
+        </log.appender.launch.property.entry>
+    </properties>
 </project>
