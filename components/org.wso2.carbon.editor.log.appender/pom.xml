@@ -104,9 +104,15 @@
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
-                <filtering>true</filtering>
                 <includes>
                     <include>log4j2.xml</include>
+                </includes>
+                <targetPath>resources</targetPath>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
                     <include>launch.properties</include>
                 </includes>
                 <targetPath>resources</targetPath>
