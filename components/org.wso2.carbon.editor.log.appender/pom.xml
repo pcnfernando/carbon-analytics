@@ -45,6 +45,10 @@
         </dependency>
     </dependencies>
 
+    <properties>
+        <log.appender.entry>file\:plugins/${project.artifactId}_${project.version}.jar@1\:false</log.appender.entry>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -97,8 +101,10 @@
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
                 <includes>
                     <include>log4j2.xml</include>
+                    <include>launch.properties</include>
                 </includes>
                 <targetPath>resources</targetPath>
             </resource>

@@ -78,6 +78,7 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/target/</outputDirectory>
                                     <includes>resources/log4j2.xml</includes>
+                                    <includes>resources/launch.properties</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
